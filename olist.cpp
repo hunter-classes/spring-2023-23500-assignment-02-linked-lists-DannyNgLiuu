@@ -1,25 +1,41 @@
 #include <iostream>
 #include "node.h"
-#include "list.h"
+#include "olist.h"
 
-List::List(){
-  head = nullptr;
+Olist::Olist() {
+    head = nullptr;
 }
 
-// insert at the "front" (head)
-void List::insert(std::string data){
-  Node *tmp = new Node(data);
+void Olist::destructor() {
+    Node *walker;
+    walker = this->head;
+
+    while(walker != nullptr) {
+      walker = head;
+      head = head->getNext();
+      free(walker);
+      walker = head;
+    }
+
+}
+
+int Olist::length(){
+  int count = 0;
+  Node *walker = head;
+  while (walker != nullptr){
+    count++;
+    walker = walker->getNext();
+  }
+  return count;
+}
+
+void Olist::insert(std::string value){
+  Node *tmp = new Node(value);
   tmp->setNext(head);
   head = tmp;
 }
 
-/*
-  insert at loc
-  We need a pointer to the node BEFORE
-  the location where we want to insert 
-  Piggybacking 
- */
-void List::insert(int loc, std::string data){
+void Olist::insert(int loc, std::string data){
   Node *walker, *trailer;
   walker = this->head; // start of the list
   trailer = nullptr; // one behind
@@ -59,24 +75,7 @@ void List::insert(int loc, std::string data){
   }
 }
 
-/*
-  Alternate solution:
-    make a private variable to store the length
-    and just return it here.
-    Change all the insert/delete/remove type
-    routines to upate that variable 
- */
-int List::length(){
-  int count = 0;
-  Node *walker = head;
-  while (walker != nullptr){
-    count++;
-    walker = walker->getNext();
-  }
-  return count;
-}
-
-std::string List::toString(){
+std::string Olist::toString(){
   Node *tmp = this->head;
   std::string result = "";
   while (tmp != nullptr){
@@ -88,7 +87,7 @@ std::string List::toString(){
   return result;
 }
 
-bool List::contains(std::string item) {
+bool Olist::contains(std::string item) {
   Node *walker = head;
   while(walker != nullptr) {
     if(walker->getData() == item) {
@@ -99,13 +98,43 @@ bool List::contains(std::string item) {
   return false;      
 }
 
+std::string Olist::get(int loc) {
+  
+  int count = 0;
+  Node *walker = head;
+  while (walker != nullptr){
+    count++;
+    walker = walker->getNext();
+  }
 
-//use "delete trailer" to delete the node in remove
+  if(loc >= count) {
+    //throw std::out_of_range("Our insert is out of range");
+    return "Our insert is out of range";
+  }
 
-void List::remove(int loc) {
+ Node *trailer;
+  walker = this->head;
+  trailer = nullptr;
+
+  while(loc>0 && walker != nullptr){
+    loc=loc-1;
+
+    trailer=walker;
+    walker = walker->getNext();
+  }
+
+  if (loc < 0){
+    //throw std::out_of_range("Our insert is out of range");
+    return "Our insert is out of range";
+  }
+
+  return walker->getData();
+}
+
+void Olist::remove(int loc) {
   Node *walker, *trailer;
-  walker = this->head; // start of the list
-  trailer = nullptr; // one behind
+  walker = this->head;
+  trailer = nullptr;
   
   while(loc>0 && walker != nullptr){
     loc=loc-1;
@@ -118,26 +147,25 @@ void List::remove(int loc) {
   }
 
   if (trailer == nullptr){
-    // we're removing the first item in the list
     head = walker->getNext();
     delete walker;
   } else {
-    // general case of having a node before the
-    // node to delete
     trailer->setNext(walker->getNext());
     delete walker;   
   }
 }
 
-void List::destructor() {
-    Node *walker;
-    walker = this->head;
-
-    while(walker != nullptr) {
-      walker = head;
-      head = head->getNext();
-      free(walker);
-      walker = head;
+void Olist::reverse() {
+    Node* trailer = nullptr;
+    Node* walker = this->head;
+    Node* dog = nullptr;
+    
+    while (walker != nullptr) {
+        dog = walker->getNext();
+        walker->setNext(trailer);
+        trailer = walker;
+        walker= dog;
     }
-
+    
+    head = trailer;
 }
