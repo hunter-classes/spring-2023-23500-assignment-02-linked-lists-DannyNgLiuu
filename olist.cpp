@@ -6,7 +6,7 @@ Olist::Olist() {
     head = nullptr;
 }
 
-void Olist::destructor() {
+    Olist::~Olist() {
     Node *walker;
     walker = this->head;
 

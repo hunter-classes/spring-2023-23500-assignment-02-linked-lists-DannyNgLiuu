@@ -7,7 +7,7 @@ class Olist {
     Node *head;
     public:
     Olist();
-    void destructor();
+    ~Olist();
     int length();
     void insert(std::string value);
     void insert(int loc, std::string value);

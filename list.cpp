@@ -129,7 +129,7 @@ void List::remove(int loc) {
   }
 }
 
-void List::destructor() {
+    List::~List() {
     Node *walker;
     walker = this->head;
 

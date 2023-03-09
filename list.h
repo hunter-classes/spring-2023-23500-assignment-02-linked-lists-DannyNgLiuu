@@ -13,7 +13,7 @@ class List{
   bool contains(std::string item);
   std::string toString(); // for testing purposes
   void remove(int loc);
-  void destructor();
+  ~List();
   /*
     Try to complete for Monday:
     

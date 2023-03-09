@@ -15,8 +15,7 @@ TEST_CASE("destructor") {
     l->insert("2");
     l->insert("3");
     CHECK(l->length() == 3);
-    l->destructor();
-    CHECK(l->length() == 0);
+    delete l;
 }
 
 TEST_CASE("insert") {
